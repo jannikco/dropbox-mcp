@@ -1,51 +1,71 @@
-# Dropbox MCP setup and connection checker
+# Dropbox MCP server
 
-Generate Dropbox MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.
+Confirm the account, list a chosen folder, and continue using returned cursors to create a document inventory.
 
-Maintainer: jannikco · License: MIT · Verification: **mock-only**
+A direct-provider MCP server with useful local execution. No PipMCP account is required for local use. Provider API access and any provider charges are your responsibility.
 
 ## Quick start
 
-Requires Node.js 22 or later.
+Requires Node.js22+. Clone this repository, then run:
 
 ```sh
-npm ci
+npm ci --ignore-scripts
 npm test
 npm start
 ```
 
-The default example runs locally without credentials and makes no external changes. Verification status describes recorded evidence; local configuration tests do not establish that provider authentication or execution works.
+The default command inspects the tools offline. Configure your own credentials in your environment:
 
-## Connect dropbox
+- `DROPBOX_ACCESS_TOKEN`
 
-[Create or sign in to PipMCP](https://pipmcp.com/register?app=dropbox&utm_source=github&utm_campaign=github-dropbox-mcp) and select the integration. Connect your authorized provider account and copy its hosted MCP endpoint. Set PIPMCP_ENDPOINT and, if required, PIPMCP_TOKEN in your environment. Run npm start to produce client configuration; run npm start -- --live for a read-only connection check. Provider app presence is catalog evidence, not live verification.
+For local OAuth, use node local-auth/cli.mjs login ./connector.json with your own provider app; see AUTH.md. Your tokens remain in the native OS credential store.
 
-## Managed service
+Credential help: https://www.dropbox.com/developers/documentation/http/documentation
 
-[Continue with PipMCP](https://pipmcp.com/register?app=dropbox&utm_source=github&utm_campaign=github-dropbox-mcp). This repository is maintained by the integration team and does not imply endorsement by LinkedIn or other providers.
+## Execute a real read
 
-## Provenance and support
+Replace example record IDs with records you are authorized to access.
 
-Source revision: e54af4c3101090e778c85016b52e634c3ce5ae177b350e99e757b7d5815f2de9. The complete manifest is in integration.json; SHA256SUMS covers the reviewed artifact. Open a repository issue without credentials or personal data. See SECURITY.md for sensitive reports. No telemetry is sent by this code; signup links include explicit campaign parameters.
-
-## Provider setup inventory
-
-Run `npm start -- --setup` to inspect this app's recorded authentication requirements and setup links offline. Credentials are entered in PipMCP; this repository lists required field names only.
-
-```json
-{
-  "type": "oauth2_authorization_code",
-  "requiredCredentialFields": [
-    "client_id",
-    "client_secret",
-    "owner_authorization"
-  ],
-  "requiredHeaderNames": [],
-  "helpUrl": "https://developers.dropbox.com/oauth-guide",
-  "tenantRequired": false,
-  "accountParameterNames": []
-}
+```sh
+npm start -- --call get_current_account '{}'
 ```
 
-Provider documentation: https://www.dropbox.com/developers/documentation/http/documentation
-Provider website: https://www.dropbox.com/
+## Use with an MCP client
+
+Launch `node /absolute/path/dropbox-mcp/server.mjs` using stdio transport; pass credentials through the client environment. Stdout is reserved for JSON-RPC.
+
+## Tools
+
+| Tool | Effect | Purpose |
+| --- | --- | --- |
+| get_current_account | Read | Read the authorized Dropbox account. |
+| list_folder | Read | Read folder entries using a user-authorized path. Empty path lists the root. |
+| continue_folder_listing | Read | Read the next folder page using a cursor returned by list_folder. |
+
+## Concrete workflow
+
+Confirm the account, list a chosen folder, and continue using returned cursors to create a document inventory.
+
+1. get_current_account
+2. list_folder
+3. continue_folder_listing
+
+## Optional writes
+
+Writes are disabled by default. Set CONNECTOR_ALLOW_WRITES=true and supply `_approval: {approved:true,idempotencyKey:"unique-request-id"}` on the specific call. Do not reuse a key for a different request. Uncertain outcomes are never automatically replayed; inspect the provider before another attempt.
+
+## Capability evidence
+
+Local: **Tested — HTTP fixtures and real stdio tools/call**. Managed: **Documented**. Provider authentication and live operations have not been established by these fixture tests. Evidence applies per operation and execution mode; setup discovery does not imply provider execution.
+
+## Managed production
+
+[Activate with PipMCP](https://pipmcp.com/github/start?app=dropbox&integration=dropbox-mcp&utm_source=github&utm_campaign=github-dropbox-mcp&utm_content=readme) when you want the hosted service.  Local credentials are not uploaded by this code. Review provider permissions in the managed onboarding. [Directory and related projects](https://jannikco.github.io/pipmcp-connectors/integrations/dropbox/).
+
+## Provenance and maintenance
+
+- https://www.dropbox.com/developers/documentation/http/documentation
+- https://developers.dropbox.com/oauth-guide
+- https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder
+
+Maintainer:jannikco. MIT license for this code. See connector.json for selected operations and integration.json for evidence. Runtime dependencies retain their own licenses. Report sensitive issues through https://pipmcp.com/contact; do not post credentials or customer data in public issues.
