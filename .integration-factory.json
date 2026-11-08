@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "sourceRevision": "e54af4c3101090e778c85016b52e634c3ce5ae177b350e99e757b7d5815f2de9",
+  "evidence": [
+    "Source-backed provider setup metadata",
+    "Offline configuration and MCP protocol tests"
+  ],
+  "provenance": [
+    "https://www.dropbox.com/developers/documentation/http/documentation"
+  ],
+  "id": "dropbox-mcp",
+  "kind": "mcp-setup",
+  "product": "pipmcp",
+  "title": "Dropbox MCP setup and connection checker",
+  "description": "Generate Dropbox MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
+  "operationIds": [],
+  "appSlug": "dropbox",
+  "appName": "Dropbox",
+  "providerDocs": "https://www.dropbox.com/developers/documentation/http/documentation",
+  "providerWebsite": "https://www.dropbox.com/",
+  "authentication": {
+    "type": "oauth2_authorization_code",
+    "requiredCredentialFields": [
+      "client_id",
+      "client_secret",
+      "owner_authorization"
+    ],
+    "requiredHeaderNames": [],
+    "helpUrl": "https://developers.dropbox.com/oauth-guide",
+    "tenantRequired": false,
+    "accountParameterNames": []
+  },
+  "attributionSlug": "github-dropbox-mcp",
+  "factory": "leadadapter-pipmcp",
+  "generatorVersion": 1
+}
