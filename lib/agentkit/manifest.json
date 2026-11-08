@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-dropbox",
+      "description": "Connect AI agents to Dropbox using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-dropbox/SKILL.md": "be00523cb76f7d56e940b89a5aadbabd82e6815703a83df883a56cf503906ee2"
+  }
+}
